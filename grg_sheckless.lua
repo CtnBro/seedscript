@@ -3,62 +3,99 @@ loadstring([[
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local LocalPlayer = Players.LocalPlayer
 
-    local remote = ReplicatedStorage:WaitForChild("Spawn")
+    -- Lista de sementes disponíveis no jogo
+    local seeds = {
+        Beanstalk = "Beanstalk",
+        Bamboo = "Bamboo",
+        Cactus = "Cactus",
+        Cacao = "Cacao",
+        CandyBlossom = "Candy Blossom",
+        Celestiberry = "Celestiberry",
+        ChocolateCarrot = "Chocolate Carrot",
+        Coconut = "Coconut",
+        Corn = "Corn",
+        Cranberry = "Cranberry",
+        CursedFruit = "Cursed Fruit",
+        Durian = "Durian",
+        Eggplant = "Eggplant",
+        Grape = "Grape",
+        Mango = "Mango",
+        MoonBlossom = "Moon Blossom",
+        MoonMango = "Moon Mango",
+        MoonMelon = "Moon Melon",
+        Moonflower = "Moonflower",
+        Nightshade = "Nightshade",
+        Passionfruit = "Passionfruit",
+        Pear = "Pear",
+        Pepper = "Pepper",
+        Pineapple = "Pineapple",
+        Pumpkin = "Pumpkin",
+        Raspberry = "Raspberry",
+        RedLollipop = "Red Lollipop",
+        SoulFruit = "Soul Fruit",
+        Strawberry = "Strawberry",
+        Tomato = "Tomato",
+        Watermelon = "Watermelon",
+        VenusFlyTrap = "Venus Fly Trap",
+        Lotus = "Lotus",
+        Moonglow = "Moonglow",
+        Starfruit = "Starfruit",
+        Papaya = "Papaya",
+        Lemon = "Lemon",
+        Banana = "Banana",
+        CherryBlossom = "Cherry Blossom",
+        Glowshroom = "Glowshroom",
+        Mint = "Mint",
+        Moonflower = "Moonflower",
+        Glowshroom = "Glowshroom"
+    }
 
-    local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+    -- Função para verificar e dar a semente ao jogador
+    local function giveSeed(seedName)
+        local seed = seeds[seedName]
+        if seed then
+            local seedItem = ReplicatedStorage:FindFirstChild(seed)
+            if seedItem then
+                local playerSeedFolder = LocalPlayer:FindFirstChild("Seed Items")
+                if not playerSeedFolder then
+                    playerSeedFolder = Instance.new("Folder")
+                    playerSeedFolder.Name = "Seed Items"
+                    playerSeedFolder.Parent = LocalPlayer
+                end
+                local seedClone = seedItem:Clone()
+                seedClone.Parent = playerSeedFolder
+                print("Semente '" .. seedName .. "' adicionada ao seu inventário.")
+            else
+                print("Semente '" .. seedName .. "' não encontrada no jogo.")
+            end
+        else
+            print("Nome de semente inválido.")
+        end
+    end
+
+    -- Interface do usuário para entrada do nome da semente
     local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "SeedSpawnerGUI"
-    screenGui.Parent = playerGui
+    screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
-    local frame = Instance.new("Frame", screenGui)
-    frame.Size = UDim2.new(0, 250, 0, 150)
-    frame.Position = UDim2.new(0.5, -125, 0.5, -75)
-    frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-    frame.BorderSizePixel = 0
-    frame.BackgroundTransparency = 0.1
-    frame.Active = true
-    frame.Draggable = true
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 300, 0, 200)
+    frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    frame.Parent = screenGui
 
-    local title = Instance.new("TextLabel", frame)
-    title.Text = "Seed Spawner"
-    title.Font = Enum.Font.FredokaOne
-    title.TextSize = 22
-    title.Size = UDim2.new(1, 0, 0, 30)
-    title.BackgroundTransparency = 1
-    title.TextColor3 = Color3.new(1, 1, 1)
+    local textBox = Instance.new("TextBox")
+    textBox.Size = UDim2.new(0, 200, 0, 50)
+    textBox.Position = UDim2.new(0.5, -100, 0.5, -25)
+    textBox.PlaceholderText = "Digite o nome da semente"
+    textBox.Parent = frame
 
-    local input = Instance.new("TextBox", frame)
-    input.PlaceholderText = "Enter seed"
-    input.Size = UDim2.new(0.8, 0, 0, 30)
-    input.Position = UDim2.new(0.1, 0, 0.35, 0)
-    input.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    input.TextColor3 = Color3.new(1, 1, 1)
-    input.TextSize = 18
-    input.ClearTextOnFocus = false
-
-    local button = Instance.new("TextButton", frame)
-    button.Text = "Spawn Seed"
-    button.Size = UDim2.new(0.8, 0, 0, 30)
-    button.Position = UDim2.new(0.1, 0, 0.65, 0)
-    button.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-    button.TextColor3 = Color3.new(1, 1, 1)
-    button.TextSize = 18
-
-    local credits = Instance.new("TextLabel", frame)
-    credits.Text = "Made By Twentys2 Scripts"
-    credits.Font = Enum.Font.SourceSansItalic
-    credits.TextSize = 14
-    credits.Position = UDim2.new(0, 0, 1, -20)
-    credits.Size = UDim2.new(1, 0, 0, 20)
-    credits.TextColor3 = Color3.fromRGB(200, 200, 200)
-    credits.BackgroundTransparency = 1
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 100, 0, 50)
+    button.Position = UDim2.new(0.5, -50, 0.5, 50)
+    button.Text = "Obter Semente"
+    button.Parent = frame
 
     button.MouseButton1Click:Connect(function()
-        local seed = input.Text
-        if seed and seed ~= "" then
-            remote:FireServer(seed)
-        else
-            warn("Digite o nome de uma semente.")
-        end
+        giveSeed(textBox.Text)
     end)
 ]])()
